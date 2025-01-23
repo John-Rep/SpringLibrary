@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +44,29 @@ public class BookController {
 		Optional<Author> author = authorRepository.findById(bookdto.getAuthor_id());
 		book.setAuthor(author.get());
 		return bookRepository.save(book);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Book> updateBook(@RequestBody BookDTO bookdto, @PathVariable Long id) {
+		Book book = bookRepository.findById(id).orElse(null);
+		if (book != null) {
+			book.setTitle(bookdto.getTitle());
+			book.setDescription(bookdto.getDescription());
+			Optional<Author> author = authorRepository.findById(bookdto.getAuthor_id());
+			book.setAuthor(author.get());
+			return ResponseEntity.ok(bookRepository.save(book));
+		}
+		return ResponseEntity.notFound().build();
+		
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+		if (bookRepository.findById(id) != null) {
+			bookRepository.deleteById(id);
+			return ResponseEntity.noContent().build();
+		} 
+		return ResponseEntity.notFound().build();
 	}
 	
 	
