@@ -39,6 +39,26 @@ public class BookController {
 		return bookRepository.findAll();
 	}
 
+	@GetMapping("/authors")
+	public List<Author> getAuthors() {
+		return authorRepository.findAll();
+	}
+
+	@GetMapping("/authors/{id}")
+	public List<Book> getBooksByAuthor(@PathVariable Long id) {
+		return bookRepository.findByAuthorId(id);
+	}
+
+	@GetMapping("/categories/{id}")
+	public List<Book> getBooksByCategory(@PathVariable Long id) {
+		return bookRepository.findByCategoriesId(id);
+	}
+
+	@GetMapping("/categories")
+	public List<Category> getCategories() {
+		return categoryRepository.findAll();
+	}
+
 	@PostMapping("/create")
 	public Book createBook(@RequestBody BookDTO bookdto) {
 		Book book = new Book();
